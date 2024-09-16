@@ -11,7 +11,8 @@ def trigger():
 
 def run_script():
     # Code to run your Python script
-    print("Running the Python script...")
+    print("HELLO GAJA BOAAAAAAAAAAAAAAAAAAAA :)")
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000) #host='0.0.0.0' if all hosts can send the http request
