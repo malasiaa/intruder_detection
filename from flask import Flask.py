@@ -1,5 +1,6 @@
 from flask import Flask, request, abort
 import time
+from model_function import run_script
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ def limit_remote_addr():
 
 # List to store the timestamps of incoming requests
 request_times = []
+
 
 @app.route('/trigger', methods=['GET'])
 def trigger():
@@ -37,10 +39,6 @@ def trigger():
         request_times = []
     
     return "Request received", 200
-
-
-def run_script():
-    print("Rice is good!")
 
 
 if __name__ == '__main__':
