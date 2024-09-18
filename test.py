@@ -1,23 +1,30 @@
 import cv2
 
-ip_camera_url = 'http://192.168.1.70'  # Example URL
+ip_camera_url = 'http://192.168.1.70/'  # Example URL
 
-# Open the video stream
-cap = cv2.VideoCapture(0)
+try:
+    cap = cv2.VideoCapture(ip_camera_url, apiPreference=cv2.CAP_MSMF)
+    
+    if not cap.isOpened():
+        raise IOError("Cannot open camera")
 
-#cap = cv2.VideoCapture(0)
-while cap.isOpened():
-    ret, frame = cap.read()
+    cap.set(cv2.CAP_PROP_TIMEOUT_MS, 30000)
 
-    # show image 'Webcam' is the name atributed in the window
-    cv2.imshow('Webcam', frame)
+    while cap.isOpened():
+        ret, frame = cap.read()
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        if not ret:
+            print("Cannot read frame")
+            break
 
-# Releases camera
-#cap.release()
-# Closes the frame
-cv2.destroyAllWindows()
+        cv2.imshow('Webcam', frame)
 
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
+except Exception as e:
+    print(f"An error occurred: {str(e)}")
+
+finally:
+    cap.release()
+    cv2.destroyAllWindows()
