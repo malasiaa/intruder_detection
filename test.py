@@ -1,14 +1,15 @@
 import cv2
 
-ip_camera_url = 'http://192.168.1.70/'  # Example URL
+ip_camera_url = 'http://192.168.1.70'  # Example URL
+
 
 try:
-    cap = cv2.VideoCapture(ip_camera_url, apiPreference=cv2.CAP_MSMF)
+    cap = cv2.VideoCapture(ip_camera_url)
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Buffer size of 1 to reduce latency
+
     
     if not cap.isOpened():
         raise IOError("Cannot open camera")
-
-    cap.set(cv2.CAP_PROP_TIMEOUT_MS, 30000)
 
     while cap.isOpened():
         ret, frame = cap.read()
