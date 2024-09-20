@@ -1,5 +1,6 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <HTTPClient.h>
 #include "esp_timer.h"
 #include "img_converters.h"
 #include "Arduino.h"
@@ -10,10 +11,18 @@
 #include "esp_wifi.h"
 #include "driver/ledc.h"
 #include "driver/gpio.h"
+#include "camera_stream.h"
 
 // Replace with your network credentials
-const char* ssid = "WiFi_5461";
-const char* password = "GEGAY3MHLQR";
+
+//const char* ssid = "WiFi_5461";
+//const char* password = "GEGAY3MHLQR";
+
+const char* ssid = "WiFi_3693";
+const char* password = "67EFQ9ELG53";
+
+// Server to send requets and trigger script
+const char* serverName = "http://192.168.1.69:5000/trigger";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -52,87 +61,7 @@ const char* password = "GEGAY3MHLQR";
   #error "Camera model not selected"
 #endif
 
-static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
-static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
-static const char* _STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
-
-httpd_handle_t stream_httpd = NULL;
-
-static esp_err_t stream_handler(httpd_req_t *req){
-  camera_fb_t * fb = NULL;
-  esp_err_t res = ESP_OK;
-  size_t _jpg_buf_len = 0;
-  uint8_t * _jpg_buf = NULL;
-  char * part_buf[64];
-
-  res = httpd_resp_set_type(req, _STREAM_CONTENT_TYPE);
-  if(res != ESP_OK){
-    return res;
-  }
-
-  while(true){
-    fb = esp_camera_fb_get();
-    if (!fb) {
-      Serial.println("Camera capture failed");
-      res = ESP_FAIL;
-    } else {
-      if(fb->width > 400){
-        if(fb->format != PIXFORMAT_JPEG){
-          bool jpeg_converted = frame2jpg(fb, 80, &_jpg_buf, &_jpg_buf_len);
-          esp_camera_fb_return(fb);
-          fb = NULL;
-          if(!jpeg_converted){
-            Serial.println("JPEG compression failed");
-            res = ESP_FAIL;
-          }
-        } else {
-          _jpg_buf_len = fb->len;
-          _jpg_buf = fb->buf;
-        }
-      }
-    }
-    if(res == ESP_OK){
-      size_t hlen = snprintf((char *)part_buf, 64, _STREAM_PART, _jpg_buf_len);
-      res = httpd_resp_send_chunk(req, (const char *)part_buf, hlen);
-    }
-    if(res == ESP_OK){
-      res = httpd_resp_send_chunk(req, (const char *)_jpg_buf, _jpg_buf_len);
-    }
-    if(res == ESP_OK){
-      res = httpd_resp_send_chunk(req, _STREAM_BOUNDARY, strlen(_STREAM_BOUNDARY));
-    }
-    if(fb){
-      esp_camera_fb_return(fb);
-      fb = NULL;
-      _jpg_buf = NULL;
-    } else if(_jpg_buf){
-      free(_jpg_buf);
-      _jpg_buf = NULL;
-    }
-    if(res != ESP_OK){
-      break;
-    }
-  }
-  return res;
-}
-
-void startCameraServer(){
-  httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-  config.server_port = 80;
-  config.task_priority = tskIDLE_PRIORITY+1;
-  config.stack_size = 8192;  // Increased stack size to handle more data
-
-  httpd_uri_t index_uri = {
-    .uri       = "/",
-    .method    = HTTP_GET,
-    .handler   = stream_handler,
-    .user_ctx  = NULL
-  };
-  
-  if (httpd_start(&stream_httpd, &config) == ESP_OK) {
-    httpd_register_uri_handler(stream_httpd, &index_uri);
-  }
-}
+void startCameraServer();
 
 void setup() {
   // Enable external antenna
@@ -215,10 +144,34 @@ void loop() {
   if (pirState == HIGH) {
     // PIR sensor is triggered, turn on the LED
     ledcWrite(0, 50); // 50% duty cycle
+
+    // Send HTTP GET request to Flask server
+    if (WiFi.status() == WL_CONNECTED) { // Check Wi-Fi connection status
+      HTTPClient http;
+
+      http.begin(serverName); // Specify destination for HTTP request
+      int httpResponseCode = http.GET();  // Send the request
+
+      // Check the response code
+      if (httpResponseCode > 0) {
+        String response = http.getString(); // Get the response to the request
+        Serial.println(httpResponseCode);   // Print HTTP response code
+        Serial.println(response);           // Print the server response
+      }
+      else {
+        Serial.print("Error on sending request: ");
+        Serial.println(httpResponseCode);
+      }
+
+      http.end();  // Free resources
+    }
+    delay(500); // Delay for 1 second
+
+
   } else {
     // PIR sensor not triggered, turn off the LED
     ledcWrite(0, 0);
   }
 
-  delay(1000);
+  delay(500);
 }
