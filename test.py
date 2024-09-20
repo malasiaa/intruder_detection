@@ -1,11 +1,11 @@
 import cv2
 
-ip_camera_url = 'http://192.168.1.70'  # Example URL
+ip_camera_url = 'http://192.168.1.70:81/stream'  # Example URL
 
 
 try:
     cap = cv2.VideoCapture(ip_camera_url)
-    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Buffer size of 1 to reduce latency
+    #cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Buffer size of 1 to reduce latency
 
     
     if not cap.isOpened():
