@@ -7,7 +7,7 @@ model = torch.hub.load('yolov5', 'yolov5s')  # yolov5s is a lightweight model
 
 def run_script():
     # Replace with your IP camera's stream URL
-    ip_camera_url = 'http://192.168.1.70'  # Example URL
+    ip_camera_url = 'http://192.168.1.70:81/stream'  # Example URL
 
     # Open the video stream
     cap = cv2.VideoCapture(ip_camera_url)
