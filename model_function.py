@@ -57,11 +57,11 @@ def run_script():
             label = f'{model.names[class_id]}'
             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    current_time = datetime.datetime.today()
-    current_time = current_time.strftime("%m.%d.%Y_%H:%M:%S")
+    # Get the current time to include in the filename
+    current_time = datetime.datetime.today().strftime('%Y%m%d_%H%M%S')
 
-    # Save the image with bounding boxes
-    cv2.imwrite(f"/output_images/output_with_boxes_{current_time}.jpg", frame)
+    # Save the image with bounding boxes and timestamp in the filename
+    cv2.imwrite(f"output_images/output_with_boxes_{current_time}.jpg", frame)
     
     # Release the video capture object
     cap.release()
