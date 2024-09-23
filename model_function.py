@@ -1,11 +1,10 @@
 import torch
 import cv2
-import datetime, time
+import datetime
 from ultralytics import YOLO
 
 try:
-
-    # Create an instance of YOLOv5
+    # Create an instance of YOLOv8
     model = YOLO('yolov8s.pt')
     
     # Move the model to GPU if available
@@ -15,7 +14,6 @@ try:
 except Exception as e:
     print(f"An error occurred while loading the model: {e}")
     exit(1)
-
 
 def run_script():
     # Replace with your IP camera's stream URL
@@ -27,42 +25,45 @@ def run_script():
     if not cap.isOpened():
         print("Error: Cannot access the camera stream.")
         return
+    # Workaround to deal with delay and avoid getting the n-1 frame
+    # Clear the buffer by reading multiple frames
+    for i in range(5):  # Read 5 frames to clear the buffer
+        ret, frame = cap.read()
 
-    ret, frame = cap.read()  # Read one frame
     if not ret:
         print("Error: Unable to read frame from the camera.")
+        cap.release()  # Always release the video capture object when done
         return
-    
-    current_time = datetime.datetime.today()
-    # Run the YOLOv5 model on the frame
-    results = model(frame)  # Pass the image to YOLOv5 model
 
-    # Parse the detection results
+    # Run the YOLOv8 model on the latest frame
+    results = model(frame)
+
     detected_humans = False
 
+    # Parse the detection results
     for result in results:
-        for box in result.boxes:  # Iterate over each detected box
-            class_id = int(box.cls)  # Get the class ID
+        for box in result.boxes:
+            class_id = int(box.cls)
             print(f"Class ID: {class_id}")
             if class_id == 0:  # Class '0' corresponds to 'person'
                 detected_humans = True
-            
+
             # Extract the bounding box coordinates (x1, y1, x2, y2)
             x1, y1, x2, y2 = map(int, box.xyxy[0])
-            
+
             # Draw the rectangle around the detected object
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            
+
             # Add label to the box
             label = f'{model.names[class_id]}'
             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     # Get the current time to include in the filename
-    current_time = datetime.datetime.today().strftime('%Y%m%d_%H%M%S')
+    current_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
     # Save the image with bounding boxes and timestamp in the filename
     cv2.imwrite(f"output_images/output_with_boxes_{current_time}.jpg", frame)
-    
+
     # Release the video capture object
     cap.release()
 
@@ -71,5 +72,3 @@ def run_script():
     else:
         print("No human detected.")
 
-# Call the function
-run_script()
