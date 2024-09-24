@@ -1,31 +1,32 @@
-import cv2
+import asyncio
+from aiogram import Bot, types
+from aiogram import Dispatcher
+from aiogram.types import InputFile
 
-ip_camera_url = 'http://192.168.1.70:81/stream'  # Example URL
+# Set up Telegram bot
+bot_token = '7558765085:AAHA9j4WIlNfpkWXGoaErnowFFFRKaMtsk0'
+chat_id = '6731228814'
+bot = Bot(token=bot_token)
 
+dp = Dispatcher()
 
-try:
-    cap = cv2.VideoCapture(ip_camera_url)
-    #cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Buffer size of 1 to reduce latency
+# Define an async function to send the photo
+async def send_photo(chat_id, image_path):
+    try:
+        # Use InputFile to wrap the image path
+        photo = InputFile(image_path)
+        await bot.send_photo(chat_id=chat_id, photo=photo)
+    except PermissionError as e:
+        print(f"PermissionError: {e}")
+    finally:
+        await bot.session.close()  # Close the bot session properly
 
-    
-    if not cap.isOpened():
-        raise IOError("Cannot open camera")
+# Run the async function
+async def main():
+    image_path = 'C:\\Users\\josej\\OneDrive\\Documentos\\GitHub\\intruder_detection\\output_images\\human_output_with_boxes_20240924_223444.jpg'
+    await send_photo(chat_id, image_path)
 
-    while cap.isOpened():
-        ret, frame = cap.read()
+# Run the asyncio event loop
+if __name__ == "__main__":
+    asyncio.run(main())
 
-        if not ret:
-            print("Cannot read frame")
-            break
-
-        cv2.imshow('Webcam', frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-except Exception as e:
-    print(f"An error occurred: {str(e)}")
-
-finally:
-    cap.release()
-    cv2.destroyAllWindows()
