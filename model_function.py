@@ -2,6 +2,13 @@ import torch
 import cv2
 import datetime
 from ultralytics import YOLO
+import telegram
+
+# Set up Telegram bot
+bot_token = '7558765085:AAHA9j4WIlNfpkWXGoaErnowFFFRKaMtsk0'
+chat_id = '6731228814'
+
+bot = telegram.Bot(token=bot_token)
 
 try:
     # Create an instance of YOLOv8
@@ -15,9 +22,16 @@ except Exception as e:
     print(f"An error occurred while loading the model: {e}")
     exit(1)
 
+def send_telegram_message(text, image_path=None):
+    """Send a message with an optional image to the Telegram bot."""
+    bot.send_message(chat_id=chat_id, text=text)
+    if image_path:
+        # Send the image if provided
+        bot.send_photo(chat_id=chat_id, photo=open(image_path, 'rb'))
+
 def run_script():
     # Replace with your IP camera's stream URL
-    ip_camera_url = 'http://192.168.1.70:81/stream'  # Example URL
+    ip_camera_url = 'http://192.168.1.71:81/stream'  # Example URL
 
     # Open the video stream
     cap = cv2.VideoCapture(ip_camera_url)
@@ -68,7 +82,16 @@ def run_script():
     cap.release()
 
     if detected_humans:
+        # Saving the image with human
+        image_path = f"output_images/human_output_with_boxes_{current_time}.jpg"
+        cv2.imwrite(image_path, frame)
         print("Human detected!")
+
+        # Send Telegram message
+        send_telegram_message("Alert: Human detected on your camera feed!", image_path=image_path)
     else:
+        # Saving the image with human
+        image_path = f"output_images/output_with_boxes_{current_time}.jpg"
+        cv2.imwrite(image_path, frame)
         print("No human detected.")
 
