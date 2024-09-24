@@ -5,7 +5,7 @@ from model_function import run_script
 app = Flask(__name__)
 
 # List of allowed IP addresses
-ALLOWED_IPS = ['192.168.1.69', '192.168.1.70']  # Add your desired IPs here
+ALLOWED_IPS = ['192.168.1.69', '192.168.1.71']  # Add your desired IPs here
 
 
 @app.before_request
