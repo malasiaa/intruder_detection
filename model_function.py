@@ -2,13 +2,17 @@ import torch
 import cv2
 import datetime
 from ultralytics import YOLO
-import telegram
+import asyncio
+from aiogram import Bot
+from aiogram import Dispatcher
+from aiogram.types import FSInputFile
 
 # Set up Telegram bot
 bot_token = '7558765085:AAHA9j4WIlNfpkWXGoaErnowFFFRKaMtsk0'
 chat_id = '6731228814'
+bot = Bot(token=bot_token)
 
-bot = telegram.Bot(token=bot_token)
+dp = Dispatcher()
 
 try:
     # Create an instance of YOLOv8
@@ -22,12 +26,16 @@ except Exception as e:
     print(f"An error occurred while loading the model: {e}")
     exit(1)
 
-def send_telegram_message(text, image_path=None):
-    """Send a message with an optional image to the Telegram bot."""
-    bot.send_message(chat_id=chat_id, text=text)
-    if image_path:
-        # Send the image if provided
-        bot.send_photo(chat_id=chat_id, photo=open(image_path, 'rb'))
+# Define an async function to send the photo
+async def send_telegram_message(chat_id, image_path, text="Human detected!"):
+    try:
+        # Use InputFile to wrap the image path
+        photo = FSInputFile(image_path)
+        await bot.send_photo(chat_id=chat_id, photo=photo, caption=text)
+    except PermissionError as e:
+        print(f"PermissionError: {e}")
+    finally:
+        await bot.session.close()  # Close the bot session properly
 
 def run_script():
     # Replace with your IP camera's stream URL
@@ -88,7 +96,7 @@ def run_script():
         print("Human detected!")
 
         # Send Telegram message
-        send_telegram_message("Alert: Human detected on your camera feed!", image_path=image_path)
+        send_telegram_message(chat_id=chat_id, image_path=image_path)
     else:
         # Saving the image with human
         image_path = f"output_images/output_with_boxes_{current_time}.jpg"
