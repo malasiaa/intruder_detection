@@ -6,10 +6,12 @@ import asyncio
 from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram.types import FSInputFile
+import config
 
 # Set up Telegram bot
-bot_token = '7558765085:AAHA9j4WIlNfpkWXGoaErnowFFFRKaMtsk0'
-chat_id = '6731228814'
+bot_token = config.bot_token
+chat_id = config.chat_id
+
 bot = Bot(token=bot_token)
 
 dp = Dispatcher()
