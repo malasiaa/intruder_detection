@@ -1,7 +1,7 @@
 import asyncio
-from aiogram import Bot, types
+from aiogram import Bot
 from aiogram import Dispatcher
-from aiogram.types import InputFile
+from aiogram.types import FSInputFile
 
 # Set up Telegram bot
 bot_token = '7558765085:AAHA9j4WIlNfpkWXGoaErnowFFFRKaMtsk0'
@@ -14,8 +14,8 @@ dp = Dispatcher()
 async def send_photo(chat_id, image_path):
     try:
         # Use InputFile to wrap the image path
-        photo = InputFile(image_path)
-        await bot.send_photo(chat_id=chat_id, photo=photo)
+        photo = FSInputFile(image_path)
+        await bot.send_photo(chat_id=chat_id, photo=photo, caption="Human detected!")
     except PermissionError as e:
         print(f"PermissionError: {e}")
     finally:
