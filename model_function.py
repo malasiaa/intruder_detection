@@ -2,7 +2,6 @@ import torch
 import cv2
 import datetime
 from ultralytics import YOLO
-import asyncio
 from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram.types import FSInputFile
@@ -41,7 +40,7 @@ async def send_telegram_message(chat_id, image_path, text="Human detected!"):
 
 def run_script():
     # Replace with your IP camera's stream URL
-    ip_camera_url = 'http://192.168.1.71:81/stream'  # Example URL
+    ip_camera_url = config.ip_camera_url
 
     # Open the video stream
     cap = cv2.VideoCapture(ip_camera_url)
@@ -86,14 +85,14 @@ def run_script():
     current_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
     # Save the image with bounding boxes and timestamp in the filename
-    cv2.imwrite(f"output_images/output_with_boxes_{current_time}.jpg", frame)
+    cv2.imwrite(f"{config.output_images_path}/output_with_boxes_{current_time}.jpg", frame)
 
     # Release the video capture object
     cap.release()
 
     if detected_humans:
         # Saving the image with human
-        image_path = f"output_images/human_output_with_boxes_{current_time}.jpg"
+        image_path = f"{config.output_images_path}/human_output_with_boxes_{current_time}.jpg"
         cv2.imwrite(image_path, frame)
         print("Human detected!")
 
