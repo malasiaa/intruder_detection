@@ -1,18 +1,20 @@
 from flask import Flask, request, abort
 import time
 from model_function import run_script
+import config
 
 app = Flask(__name__)
 
 # List of allowed IP addresses
-ALLOWED_IPS = ['192.168.1.69', '192.168.1.71']  # Add your desired IPs here
+ALLOWED_IPS = config.ALLOWED_IPS  # Add your desired IPs here
 
-
+# Option to limit the 
 @app.before_request
 def limit_remote_addr():
-    client_ip = request.remote_addr
-    if client_ip not in ALLOWED_IPS:
-        abort(403)  # Forbidden
+    if ALLOWED_IPS is not None:
+        client_ip = request.remote_addr
+        if client_ip not in ALLOWED_IPS:
+            abort(403)  # Forbidden
 
 
 # List to store the timestamps of incoming requests
