@@ -6,7 +6,7 @@ import config
 app = Flask(__name__)
 
 # List of allowed IP addresses
-ALLOWED_IPS = config.ALLOWED_IPS  # Add your desired IPs here
+ALLOWED_IPS = config.FLASK_ALLOWED_IPS  # Add your desired IPs here
 
 # Option to limit the 
 @app.before_request
