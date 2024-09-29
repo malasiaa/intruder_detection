@@ -8,8 +8,8 @@ from aiogram.types import FSInputFile
 import config
 
 # Set up Telegram bot
-bot_token = config.bot_token
-chat_id = config.chat_id
+bot_token = config.TELEGRAM_bot_token
+chat_id = config.TELEGRAM_chat_id
 
 bot = Bot(token=bot_token)
 
@@ -40,7 +40,7 @@ async def send_telegram_message(chat_id, image_path, text="Human detected!"):
 
 def run_script():
     # Replace with your IP camera's stream URL
-    ip_camera_url = config.ip_camera_url
+    ip_camera_url = config.IP_CAMERA_URL
 
     # Open the video stream
     cap = cv2.VideoCapture(ip_camera_url)
@@ -85,19 +85,19 @@ def run_script():
     current_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
     # Save the image with bounding boxes and timestamp in the filename
-    cv2.imwrite(f"{config.output_images_path}/output_with_boxes_{current_time}.jpg", frame)
+    cv2.imwrite(f"{config.OUTPUT_IMAGES_PATH}/output_with_boxes_{current_time}.jpg", frame)
 
     # Release the video capture object
     cap.release()
 
     if detected_humans:
         # Saving the image with human
-        image_path = f"{config.output_images_path}/human_output_with_boxes_{current_time}.jpg"
+        image_path = f"{config.OUTPUT_IMAGES_PATH}/human_output_with_boxes_{current_time}.jpg"
         cv2.imwrite(image_path, frame)
         print("Human detected!")
 
         # Send Telegram message
-        send_telegram_message(chat_id=chat_id, image_path=image_path)
+        #send_telegram_message(chat_id=chat_id, image_path=image_path)
     else:
         # Saving the image with human
         image_path = f"output_images/output_with_boxes_{current_time}.jpg"
