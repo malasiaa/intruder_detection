@@ -32,10 +32,10 @@ def trigger():
     request_times.append(current_time)
     
     # Remove timestamps older than 30 seconds
-    request_times = [t for t in request_times if current_time - t <= 30]
+    request_times = [t for t in request_times if current_time - t <= 15]
     
     # Check if there are 3 or more requests in the last 20 seconds
-    if len(request_times) >= 3:
+    if len(request_times) >= 2:
         run_script()
         # Optionally clear the list to start fresh after triggering the script
         request_times = []
