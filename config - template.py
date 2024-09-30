@@ -9,7 +9,7 @@ ALLOWED_IPS = ['192.168.69.69', '192.168.69.70']  # change to "None" if any IP c
 
 # telegram setup
 TELEGRAM_bot_token = 'TELEGRAM:TOKEN'
-TELEGRA_chat_id = 'CHATID12342'
+TELEGRAM_chat_id = 'CHATID12342'
 
 # Replace with your IP camera's stream URL
 # (Template IPs)
