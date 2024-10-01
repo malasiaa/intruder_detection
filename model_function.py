@@ -97,7 +97,7 @@ def run_script():
         print("Human detected!")
 
         # Send Telegram message
-        #send_telegram_message(chat_id=chat_id, image_path=image_path)
+        send_telegram_message(chat_id=chat_id, image_path=image_path)
     else:
         # Saving the image with human
         image_path = f"output_images/output_with_boxes_{current_time}.jpg"
