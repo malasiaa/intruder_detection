@@ -20,7 +20,6 @@ def limit_remote_addr():
 # List to store the timestamps of incoming requests
 request_times = []
 
-
 @app.route('/trigger', methods=['GET'])
 def trigger():
     global request_times
