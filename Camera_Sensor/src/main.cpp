@@ -11,21 +11,15 @@
 #include "esp_wifi.h"
 #include "driver/ledc.h"
 #include "driver/gpio.h"
-#include "camera_stream.h"
+#include "camera_stream.h" //custom lib with startCameraServer() function
 
 
 // Replace with your network credentials
-const char* ssid = "WiFi_5461";
-const char* password = "GEGAY3MHLQR";
+const char* ssid = "<INSERT_SSID>";
+const char* password = "<INSERT_PASS>";
 
-//const char* ssid = "WiFi_3693";
-//const char* password = "67EFQ9ELG53";
-
-
-// Server to send requets and trigger script
-//const char* serverName = "http://192.168.1.69:5000/trigger";
-
-const char* serverName = "http://192.168.1.65:5000/trigger";
+//"http://192.168.1.65:5000/trigger"
+const char* serverName = "INSERT_FLASK_SERVER_IP";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
