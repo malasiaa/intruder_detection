@@ -13,16 +13,19 @@
 #include "driver/gpio.h"
 #include "camera_stream.h"
 
+
 // Replace with your network credentials
+const char* ssid = "WiFi_5461";
+const char* password = "GEGAY3MHLQR";
 
-//const char* ssid = "WiFi_5461";
-//const char* password = "GEGAY3MHLQR";
+//const char* ssid = "WiFi_3693";
+//const char* password = "67EFQ9ELG53";
 
-const char* ssid = "WiFi_3693";
-const char* password = "67EFQ9ELG53";
 
 // Server to send requets and trigger script
-const char* serverName = "http://192.168.1.69:5000/trigger";
+//const char* serverName = "http://192.168.1.69:5000/trigger";
+
+const char* serverName = "http://192.168.1.65:5000/trigger";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -126,17 +129,17 @@ void setup() {
   // Wi-Fi connection
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
+    delay(500);
     Serial.print(".");
   }
   Serial.println("WiFi connected");
-  
   Serial.print("Camera Stream Ready! Go to: http://");
   Serial.print(WiFi.localIP());
 
   // Start streaming web server
   startCameraServer();
 }
+
 
 void loop() {
   int pirState = digitalRead(PIR_SENSOR_GPIO);
@@ -165,7 +168,7 @@ void loop() {
 
       http.end();  // Free resources
     }
-    delay(500); // Delay for 1 second
+    delay(500); // Delay for 0.5 second
 
 
   } else {
