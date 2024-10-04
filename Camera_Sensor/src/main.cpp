@@ -5,24 +5,21 @@
 #include "img_converters.h"
 #include "Arduino.h"
 #include "fb_gfx.h"
-#include "soc/soc.h" //disable brownout problems
-#include "soc/rtc_cntl_reg.h"  //disable brownout problems
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
 #include "esp_http_server.h"
 #include "esp_wifi.h"
 #include "driver/ledc.h"
 #include "driver/gpio.h"
-#include "camera_stream.h"
+#include "camera_stream.h" //custom lib with startCameraServer() function
+
 
 // Replace with your network credentials
+const char* ssid = "<INSERT_SSID>";
+const char* password = "<INSERT_PASS>";
 
-//const char* ssid = "WiFi_5461";
-//const char* password = "GEGAY3MHLQR";
-
-const char* ssid = "WiFi_3693";
-const char* password = "67EFQ9ELG53";
-
-// Server to send requets and trigger script
-const char* serverName = "http://192.168.1.69:5000/trigger";
+//"http://192.168.1.65:5000/trigger"
+const char* serverName = "INSERT_FLASK_SERVER_IP";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -126,17 +123,17 @@ void setup() {
   // Wi-Fi connection
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
+    delay(500);
     Serial.print(".");
   }
   Serial.println("WiFi connected");
-  
   Serial.print("Camera Stream Ready! Go to: http://");
   Serial.print(WiFi.localIP());
 
   // Start streaming web server
   startCameraServer();
 }
+
 
 void loop() {
   int pirState = digitalRead(PIR_SENSOR_GPIO);
@@ -165,7 +162,7 @@ void loop() {
 
       http.end();  // Free resources
     }
-    delay(500); // Delay for 1 second
+    delay(500); // Delay for 0.5 second
 
 
   } else {

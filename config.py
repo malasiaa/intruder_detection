@@ -1,8 +1,8 @@
 #-----flask script
 
-# IPs allowed to send requests to flask server
+# IPs allowed to send requests to Flask server
 # (Template IPs, replace with your IP camera's stream URL, and with you pc's IP if you desire)
-ALLOWED_IPS = ['192.168.1.2', '192.168.1.3']  # change to "None" if any IP can send a request to flask server
+ALLOWED_IPS = ['192.168.1.2', '192.168.1.3']  # change to "None" if any IP can send a request to the flask server
 
 
 #-----model function python
