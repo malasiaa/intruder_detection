@@ -6,6 +6,7 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram.types import FSInputFile
 import config
+import asyncio
 
 # Set up Telegram bot
 bot_token = config.TELEGRAM_bot_token
@@ -29,6 +30,7 @@ except Exception as e:
 
 # Define an async function to send the photo
 async def send_telegram_message(chat_id, image_path, text="Human detected!"):
+    
     try:
         # Use InputFile to wrap the image path
         photo = FSInputFile(image_path)
@@ -38,7 +40,7 @@ async def send_telegram_message(chat_id, image_path, text="Human detected!"):
     finally:
         await bot.session.close()  # Close the bot session properly
 
-def run_script():
+async def main():
     # Replace with your IP camera's stream URL
     ip_camera_url = config.IP_CAMERA_URL
 
@@ -97,7 +99,7 @@ def run_script():
         print("Human detected!")
 
         # Send Telegram message
-        send_telegram_message(chat_id=chat_id, image_path=image_path)
+        await send_telegram_message(chat_id=chat_id, image_path=image_path)
     else:
         # Saving the image with human
         image_path = f"output_images/output_with_boxes_{current_time}.jpg"
