@@ -1,7 +1,8 @@
 from flask import Flask, request, abort
 import time
-from model_function import run_script
+from model_function import main
 import config
+import asyncio
 
 app = Flask(__name__)
 
@@ -35,8 +36,8 @@ def trigger():
     
     # Check if there are 3 or more requests in the last 20 seconds
     if len(request_times) >= 2:
-        run_script()
-        # Optionally clear the list to start fresh after triggering the script
+        asyncio.run(main())
+        # clear the list to start fresh after triggering the script
         request_times = []
     
     return "Request received", 200
