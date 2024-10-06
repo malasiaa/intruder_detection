@@ -70,4 +70,4 @@ This project is a fork of my repository [wifi_camera_esp32](https://github.com/m
       - The camera IP, where it is streaming
       - Create a directory where you want to save the images classified
      
-   3) Run
+   3) Run [flask_server.py](https://github.com/malasiaa/intruder_detection/blob/main/flask_server.py) and be safe!
