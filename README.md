@@ -2,7 +2,7 @@
 
 The **Intruder Detection System** is a Python-based project that uses computer vision to detect intruders from a video stream, such as an IP camera. The system is designed to notify the user through a Telegram Bot when an intruder is detected. It captures and saves images if motion is detected. Supports real-time notifications when a human is detected.
 
-**Architecture**
+##Architecture##
 
 This project is a fork of my repository [wifi_camera_esp32](https://github.com/malasiaa/wifi_camera_esp32), but on steroids :laughing:. The ESP32 CAM, combined with a PIR sensor is placed in the desired place. You should run the Flask server script. The ESP32 board will connect to your WiFi, and if the PIR sensor detects a motion, it will send a get request to the flask server. This on another hand will retrieve an image from the camera, and classify if there are any humans in it, by using the lightweight YOLOV8s model, which can easily be run on today's average CPU. If there is any, it will send a Telegram message to your cellphone.
 
