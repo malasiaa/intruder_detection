@@ -50,7 +50,7 @@ This project is a fork of my repository [wifi_camera_esp32](https://github.com/m
    1) Create a virtual environment and install dependencies
 
         ```bash
-        python -m venv venv
+        python3 -m venv venv
         source venv/bin/activate
   
           #Or using conda:
