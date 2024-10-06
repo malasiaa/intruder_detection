@@ -34,28 +34,40 @@ This project is a fork of my repository [wifi_camera_esp32](https://github.com/m
 ## Installation
 
 1. **Clone the repository**
+   
    ```bash
    git clone https://github.com/malasiaa/intruder_detection.git
    cd intruder_detection
 
 2. **ESP32 CAM setup**
- - Open the Arduino IDE, or PlatformIO.
- - Select the main.cpp file.
- - Connect the ESP board to your computer.
- - Select the appropriate board and port under Tools > Board and Tools > Port, or if using PlatformIO, upload the config.ini file.
- - Specify your WiFi SSID, password, and the Flask Server IP, in the main.cpp sketch.
- - If using PlatformIO, make sure to add the header file camera_stream.h path in "includePath" list at the .vscode/c_cpp_properties.json file.
- - Upload the code to the board.
+   1) Open the Arduino IDE, or PlatformIO
+   2) Select the main.cpp file
+   3) Connect the ESP board to your computer
+   4) Select the appropriate board and port under Tools > Board and Tools > Port, or if using PlatformIO, upload the config.ini file
+   5) Specify your WiFi SSID, password, and the Flask Server IP, in the main.cpp sketch
+   6) If using PlatformIO, add the header file camera_stream.h path in "includePath" list at the .vscode/c_cpp_properties.json file
+   7) Upload the code to the board
 
-3. **Python setup**
- - Create a virtual environment
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
+3. **Python Setup**
 
- - Install the required dependencies
-   ```bash
-   pip install -r requirements.txt
+   1) Create a virtual environment and install dependencies
 
- - In [config.py](https://github.com/malasiaa/intruder_detection/blob/main/config.py) update the fields used by the flask and model scripts.
-   1) IPS allowed to send a request to flask server; 2) telegram token and chat id; 3) The camera IP, where it is streaming; 4) directory where you want to save the images classified.
+        ```bash
+        python -m venv venv
+        source venv/bin/activate
+  
+          #Or using conda:
+     
+        conda create --name intruder_detection_env
+        conda activate intruder_detection_env
+  
+     
+        pip install -r requirements.txt
+
+   2) Update variables in [config.py](https://github.com/malasiaa/intruder_detection/blob/main/config.py), used by the flask and model scripts
+      - IPs allowed to send a request to flask server
+      - Telegram token and chat id
+      - The camera IP, where it is streaming
+      - Create a directory where you want to save the images classified
+     
+   3) Run
