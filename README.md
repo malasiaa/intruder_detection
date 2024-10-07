@@ -23,10 +23,12 @@ The **Intruder Detection System** is a Python-based project that uses computer v
 
 ## Architecture
 
-This project is a fork of my repository [wifi_camera_esp32](https://github.com/malasiaa/wifi_camera_esp32), but on steroids :laughing:. The ESP32 CAM, combined with a PIR sensor is placed in the desired place. You should run the Flask server script. The ESP32 board will connect to your WiFi, and if the PIR sensor detects a motion, it will send a get request to the flask server. This on another hand will retrieve an image from the camera, and classify if there are any humans in it, by using the lightweight YOLOV8s model, which can easily be run on today's average CPU. If there is any, it will send a Telegram message to your cellphone.
+This project is a fork of my repository [wifi_camera_esp32](https://github.com/malasiaa/wifi_camera_esp32), but on steroids :laughing:. The ESP32 CAM, combined with a PIR sensor is placed in the desired place. You should run the Flask server script. The ESP32 board will connect to your WiFi, and if the PIR sensor detects a motion, it will send a get request to the flask server. This on another hand will retrieve an image from the camera, and classify if there are any humans in it, by using the lightweight [YOLOV8s](https://docs.ultralytics.com/models/yolov8/#performance-metrics) model, which can easily be run on today's average CPU. If there is any, it will send a Telegram message to your cellphone.
+
+The ESP32 CAM firmware also enables you to access directly the camera live stream and several options through the browser. You should go to your_cam_ip:80
 
 <p align="center" width="100%">
-    <img width="32%" src="https://github.com/user-attachments/assets/76a85c85-d25d-4e98-82d2-01d780b02871">
+    <img width="25%" src="https://github.com/user-attachments/assets/ec8ba26d-fc33-499f-86cb-57a07d8fafe4">
 </p>
 
 ## Requirements
@@ -45,7 +47,7 @@ This project is a fork of my repository [wifi_camera_esp32](https://github.com/m
    git clone https://github.com/malasiaa/intruder_detection.git
    cd intruder_detection
 
-2. **#ESP32 CAM setup**
+2. **ESP32 CAM setup**
    1) Open the Arduino IDE, or PlatformIO
    2) Select the main.cpp file
    3) Connect the ESP board to your computer
